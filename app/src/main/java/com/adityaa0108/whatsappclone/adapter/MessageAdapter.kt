@@ -1,19 +1,25 @@
 package com.adityaa0108.whatsappclone.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LAYOUT_DIRECTION_INHERIT
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.adityaa0108.whatsappclone.R
+import com.adityaa0108.whatsappclone.ReactionsListener
+import com.adityaa0108.whatsappclone.activity.ChatActivity
 import com.adityaa0108.whatsappclone.databinding.ReceiverItemLayoutBinding
 import com.adityaa0108.whatsappclone.databinding.SentItemLayoutBinding
 import com.adityaa0108.whatsappclone.model.MessageModel
+import com.adityaa0108.whatsappclone.ui.FBReactionsDialog
+
 import com.google.firebase.auth.FirebaseAuth
 
-class MessageAdapter(var context: Context, var list:ArrayList<MessageModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+class MessageAdapter(var context: Context, var list:ArrayList<MessageModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),ReactionsListener  {
 
     var ITEM_SENT = 1
     var ITEM_RECEIVE = 2
@@ -34,24 +40,73 @@ class MessageAdapter(var context: Context, var list:ArrayList<MessageModel>) : R
        return list.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-                val message = list[position]
-                if(holder.itemViewType == ITEM_SENT){
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onBindViewHolder(holder: ViewHolder, pos: Int) {
+                  val message = list[pos]
+
+        if(holder.itemViewType == ITEM_SENT){
                     val viewHolder = holder as SentViewHolder
                     viewHolder.binding.userMessage.text = message.message
-                } else{
+            viewHolder.binding.sentItem.setOnClickListener {
+                Toast.makeText(context,"Clicked",Toast.LENGTH_SHORT).show()
+                getReactionsDialog()
+            }
+        }
+        else{
                     val viewHolder = holder as ReceiverViewHolder
                     viewHolder.binding.userMessage.text = message.message
                 }
     }
 
-    inner class SentViewHolder(view: View) : RecyclerView.ViewHolder(view){
+
+    private fun getReactionsDialog(): DialogFragment {
+        val fbReactionsDialog = FBReactionsDialog()
+        fbReactionsDialog.show((context as ChatActivity).supportFragmentManager, fbReactionsDialog::class.simpleName)
+        return fbReactionsDialog
+    }
+
+
+
+
+    inner class SentViewHolder(view: View) : ViewHolder(view){
                     var binding = SentItemLayoutBinding.bind(view)
     }
 
-    inner class ReceiverViewHolder(view: View) : RecyclerView.ViewHolder(view){
+    inner class ReceiverViewHolder(view: View) : ViewHolder(view){
                    var binding = ReceiverItemLayoutBinding.bind(view)
     }
+    override fun onReactionSelected(reactionType: Int) {
+
+        val viewHolder = SentViewHolder(LayoutInflater.from(context).inflate(R.layout.sent_item_layout, null))
+        when (reactionType) {
+            0 -> {
+                viewHolder.binding.feeling.visibility = View.VISIBLE
+                viewHolder.binding.feeling.setImageResource(R.drawable.ic_fb_like)
+            }
+            1 -> {
+                viewHolder.binding.feeling.setImageResource(R.drawable.ic_fb_love)
+                viewHolder.binding.feeling.visibility = View.VISIBLE
+            }
+            2 -> {
+                viewHolder.binding.feeling.setImageResource(R.drawable.ic_fb_laugh)
+                viewHolder.binding.feeling.visibility = View.VISIBLE
+            }
+            3 -> {
+                viewHolder.binding.feeling.setImageResource(R.drawable.ic_fb_sad)
+                viewHolder.binding.feeling.visibility = View.VISIBLE
+            }
+            4 -> {
+                viewHolder.binding.feeling.setImageResource(R.drawable.ic_fb_wow)
+                viewHolder.binding.feeling.visibility = View.VISIBLE
+            }
+            5 -> {
+                viewHolder.binding.feeling.setImageResource(R.drawable.ic_fb_angry)
+                viewHolder.binding.feeling.visibility = View.VISIBLE
+            }
+        }
+    }
+
+
 
 
 }

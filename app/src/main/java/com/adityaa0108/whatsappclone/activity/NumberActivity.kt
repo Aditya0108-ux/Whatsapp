@@ -14,7 +14,7 @@ class NumberActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNumberBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        binding.phoneNumber.requestFocus()
         auth = FirebaseAuth.getInstance()
         //if user is already loggedIn with phone Number
         if(auth.currentUser != null){

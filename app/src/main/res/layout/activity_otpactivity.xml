@@ -54,24 +54,28 @@
             android:padding="10dp"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/otpField"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:inputType="number"
-                    android:hint="Enter OTP"
-                    android:imeOptions="actionDone"
-
-                    />
 
 
-            </com.google.android.material.textfield.TextInputLayout>
+               <com.mukeshsolanki.OtpView
+                   android:id="@+id/otpField"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:inputType="number"
+                   android:layout_marginTop="5dp"
+                   android:itemBackground="@color/white"
+                   android:textColor="@color/main_color"
+                   android:layout_gravity="center"
+                   android:focusable="true"
+                   android:focusableInTouchMode="true"
+                   android:clickable="true"
+                   app:OtpHideLineWhenFilled="true"
+                   app:OtpState_filled="true"
+                   app:OtpItemCount="6"
+                   app:OtpLineColor="@color/main_color"
+                   app:OtpViewType="rectangle"/>
+
+
+
             <Button
                 android:id="@+id/Continue"
                 android:layout_width="wrap_content"

@@ -1,16 +1,23 @@
 package com.adityaa0108.whatsappclone.activity
 
+
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.adityaa0108.whatsappclone.LoadingAlert
 import com.adityaa0108.whatsappclone.databinding.ActivityOtpactivityBinding
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+
 import java.util.concurrent.TimeUnit
 
 class OTPActivity : AppCompatActivity() {
@@ -18,19 +25,20 @@ class OTPActivity : AppCompatActivity() {
     private lateinit var binding:ActivityOtpactivityBinding
      private lateinit var auth:FirebaseAuth
      private lateinit var verificationId: String
-     private lateinit var dialog:AlertDialog
+     private lateinit var loadingAlert: LoadingAlert
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOtpactivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         auth=FirebaseAuth.getInstance()
         val builder = AlertDialog.Builder(this)
-        builder.setMessage("Please Wait...")
+        builder.setTitle("Please Wait...")
         builder.setMessage("Loading")
         builder.setCancelable(false)
-        dialog = builder.create()
+        loadingAlert = LoadingAlert(this)
+        loadingAlert.showLoadingDialog()
+
 
         val phoneNumber = "+91" + intent.getStringExtra("number")
         val options = PhoneAuthOptions.newBuilder(auth)
@@ -38,39 +46,64 @@ class OTPActivity : AppCompatActivity() {
             .setActivity(this)
             .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks(){
                 override fun onVerificationCompleted(p0: PhoneAuthCredential) {
+
                 }
 
                 override fun onVerificationFailed(p0: FirebaseException) {
-                    dialog.dismiss()
+                   loadingAlert.dismissLoadingDialog()
+                    Log.e("Aditya","Error",p0)
                     Toast.makeText(this@OTPActivity,"Please try again ${p0}",Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onCodeSent(p0: String, p1: PhoneAuthProvider.ForceResendingToken) {
                     super.onCodeSent(p0, p1)
                     Toast.makeText(this@OTPActivity,"OTP sent",Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
+                   loadingAlert.dismissLoadingDialog()
+                    val inputMethodManager =
+                        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+                    binding.otpField.requestFocus()
+                    binding.otpField.addTextChangedListener(object:TextWatcher{
+                        override fun beforeTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun afterTextChanged(p0: Editable?) {
+                        }
+
+                    })
                     verificationId = p0
                 }
 
             }).build()
 
           PhoneAuthProvider.verifyPhoneNumber(options)
+        binding.otpField.setOtpCompletionListener {
+            Log.d("Actual Value", it)
+        }
            binding.Continue.setOnClickListener {
                if(binding.otpField.text!!.isEmpty()){
                    Toast.makeText(this,"Please enter the OTP",Toast.LENGTH_SHORT).show()
                }
                else{
-                   dialog.show()
+                   loadingAlert.showLoadingDialog()
                    val credential = PhoneAuthProvider.getCredential(verificationId,binding.otpField.text!!.toString())
                    auth.signInWithCredential(credential)
                        .addOnCompleteListener {
                            if(it.isSuccessful){
-                               dialog.dismiss()
-                                 startActivity(Intent(this,ProfileActivity::class.java))
+                               loadingAlert.dismissLoadingDialog()
+                                 startActivity(Intent(this,UpdateProfileActivity::class.java))
                                finish()
                            }else{
-                               dialog.dismiss()
-                                 Toast.makeText(this,"Error ${it.exception}",Toast.LENGTH_SHORT).show()
+                               loadingAlert.dismissLoadingDialog()
+                                 Toast.makeText(this,"Failed",Toast.LENGTH_SHORT).show()
                            }
                        }
                }

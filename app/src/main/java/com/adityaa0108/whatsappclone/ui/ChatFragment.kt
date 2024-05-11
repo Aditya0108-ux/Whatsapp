@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.adityaa0108.whatsappclone.LoadingAlert
 
 import com.adityaa0108.whatsappclone.adapter.ChatAdapter
 import com.adityaa0108.whatsappclone.databinding.FragmentChatBinding
@@ -22,7 +23,7 @@ class   ChatFragment : Fragment() {
     lateinit var binding:FragmentChatBinding
     private lateinit var database:FirebaseDatabase
     lateinit var userList:ArrayList<UserModel>
-
+    private lateinit var loadingAlert: LoadingAlert
 
 
     override fun onCreateView(
@@ -32,6 +33,8 @@ class   ChatFragment : Fragment() {
         binding = FragmentChatBinding.inflate(layoutInflater)
         database = FirebaseDatabase.getInstance()
         userList = ArrayList()
+        loadingAlert = LoadingAlert(requireContext())
+        loadingAlert.showLoadingDialog()
 
         database.reference.child("users")
             .addValueEventListener(object : ValueEventListener{
@@ -44,6 +47,7 @@ class   ChatFragment : Fragment() {
                         }
                     }
                     binding.userListRecyclerView.adapter = ChatAdapter(requireContext(),userList)
+                    loadingAlert.dismissLoadingDialog()
 
                 }
 

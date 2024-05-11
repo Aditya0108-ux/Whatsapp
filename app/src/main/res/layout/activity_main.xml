@@ -1,37 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="0dp"
+        android:background="@color/main_color"
+        android:id="@+id/toolbar">
 
-  <TextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:minHeight="?actionBarSize"
-      android:padding="16dp"
-      android:text="@string/app_name"
-      android:textStyle="bold"
-      android:textColor="@color/white"
-      android:textSize="16sp"/>
-        <com.google.android.material.tabs.TabLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tabs"/>
-    </com.google.android.material.appbar.AppBarLayout>
-  <androidx.viewpager.widget.ViewPager
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:id="@+id/viewPager"
-      app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
 
-      />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WhatsApp"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </Toolbar>
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@id/toolbar"
+        android:id="@+id/include"
+        app:tabTextColor="#77a3a7"
+        app:tabSelectedTextColor="@color/main_color"
+        app:tabIndicatorColor="@color/main_color"
+        android:background="@color/white"
+        app:tabIndicatorHeight="3dp"
+        android:layout_marginTop="0dp"
+        >
 
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewPager"
+        android:layout_below="@id/include"
+        android:layout_marginTop="0dp"
+
+        />
+
+
+
+</RelativeLayout>

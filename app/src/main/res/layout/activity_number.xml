@@ -58,6 +58,7 @@
                 style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/phoneLayout"
                 android:hint="Enter phone number"
                 app:boxBackgroundColor="@color/white"
                 app:boxBackgroundMode="outline"

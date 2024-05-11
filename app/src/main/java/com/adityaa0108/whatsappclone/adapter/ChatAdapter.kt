@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
-
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.adityaa0108.whatsappclone.R
@@ -35,6 +34,8 @@ class ChatAdapter(var context: Context,var list:ArrayList<UserModel>) :
         holder.itemView.setOnClickListener {
             val intent = Intent(context,ChatActivity::class.java)
             intent.putExtra("uid",user.uid)
+            intent.putExtra("name",user.name)
+            intent.putExtra("image",user.imageUrl)
             context.startActivity(intent)
         }
     }

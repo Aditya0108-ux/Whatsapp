@@ -12,7 +12,7 @@ import com.adityaa0108.whatsappclone.R
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val splash_display_length = 2000//splash duration in seconds
+        val splash_display_length = 3000//splash duration in seconds
         enableEdgeToEdge()
         setContentView(R.layout.activity_splash)
         Handler().postDelayed({
